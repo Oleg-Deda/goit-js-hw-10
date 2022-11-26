@@ -17,38 +17,44 @@ function onSearch(evt) {
     return;
   }
 
-  fetchCountries(searchValue).then(country =>
-    console.log(country)
-    if (country.length > 10) {
-    Notify.info('Too many matches found. Please enter a more specific name.');
-    return;
-  }
+  fetchCountries(searchValue)
+    .then(country => {
+      console.log(country);
+      if (country.length > 10) {
+        Notify.info(
+          'Too many matches found. Please enter a more specific name.'
+        );
+        return;
+      }
 
-          countriesList.innerHTML = renderCountriesList(country);
-
-  }).catch
-    (err => Notify.failure('Oops, there is no country with that name'));
-  }
+      renderCountriesList(country);
+    })
+    .catch(err => Notify.failure('Oops, there is no country with that name'));
+}
 inputValue.addEventListener('input', debounce(onSearch, DEBOUNCE_DELAY));
 function renderCountriesList(arr) {
-  if (arr.length ===1) {
-   countryCard.innerHTML =  arr
-    .map(country => { console.log(country)
-      return `
-   <img class="country_svg" src="${country.flags.svg}" alt="${country.name}" width=40"">
+  if (arr.length === 1) {
+    return (countryCard.innerHTML = arr
+      .map(country => {
+        console.log(country);
+        return `
+   <img class="country_svg" src="${country.flags.svg}" alt="${
+          country.name
+        }" width=40"">
    <h2>${country.name.official}</h2>
-   <p class="country_text">Capital:${Country.capital}</p>
-   <p class="country_text">Population:${Country.population}</p>
+   <p class="country_text">Capital:${country.capital}</p>
+   <p class="country_text">Population:${country.population}</p>
    <p class="country_text">Languages:${Object.values(country.languages)}</p>`;
-    })
-    .join('');
-
-return arr
-  .map(country => {
-    console.log(country);
+      })
+      .join(''));
+  }
+  countriesList.innerHTML = arr
+    .map(country => {
+      console.log(country);
       return `<li class="country_item">
     <img class="country_svg" src="${country.flags.svg}" alt="${country.name}" width=40"">
    <h2>${country.name.official}</h2>
    </li>`;
     })
     .join('');
+}
